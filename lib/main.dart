@@ -6,6 +6,7 @@ import 'providers/restaurant_detail_provider.dart';
 import 'providers/restaurant_list_provider.dart';
 import 'providers/restaurant_search_provider.dart';
 import 'providers/review_provider.dart';
+import 'providers/theme_provider.dart';
 import 'screens/restaurant_list_page.dart';
 import 'services/api_service.dart';
 
@@ -108,6 +109,9 @@ class MyApp extends StatelessWidget {
         Provider<ApiService>(
           create: (_) => ApiService(),
         ),
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (_) => ThemeProvider(),
+        ),
         ChangeNotifierProvider<RestaurantListProvider>(
           create: (context) => RestaurantListProvider(
             apiService: context.read<ApiService>(),
@@ -129,13 +133,17 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Restaurant App',
-        theme: _lightTheme(),
-        darkTheme: _darkTheme(),
-        themeMode: ThemeMode.system,
-        home: const RestaurantListPage(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Restaurant App',
+            theme: _lightTheme(),
+            darkTheme: _darkTheme(),
+            themeMode: themeProvider.themeMode,
+            home: const RestaurantListPage(),
+          );
+        },
       ),
     );
   }
